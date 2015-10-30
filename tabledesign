@@ -16,18 +16,18 @@
   c)lname; VARCHAR(20), customer lastname.
   d)email; VARCHAR(40), customer email.
 4)WB_CustomerAddress
-  a)id
-  b)hbno
-  c)street
-  d)city
-  e)state
-  f)pin
+  a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
+  b)hbno; VARCHAR(20), house/building number.
+  c)street; VARCHAR(20), street name.
+  d)city; VARCHAR(20), city name.
+  e)state; VARCHAR(20), state.
+  f)pin; VARCHAR(6), zip code.
 5)WB_CustomerLifestyle
-  a)id
-  b)lsid
+  a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
+  b)lsid;; INT ,FOREIGN KEY REFERENCES WB_Lifestyle(lsid).restrict on update and cascade.
 6)WB_Lifestyle
-  a)lsid
-  b)lsname
+  a)lsid; INT, unique id for a lifestyle
+  b)lsname; VARCHAR(20), name of the lifestyle.
 7)WB_CustomerTransactions
 
 8)WB_Transactions
