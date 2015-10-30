@@ -1,20 +1,20 @@
 ##################################customer tables.###########################
 1)WB_CustomerMaster
-  a)id
-  b)mobno
-  c)password
-  d)verified
+  a)id; INT PRIMARY KEY 
+  b)mobno; VARCHAR(13), UNIQUE, user registered mobile number.
+  c)password; VARCHAR, user password.
+  d)verified; BOOLEAN, mobile number verification status.
 2)WB_CustomerSession
-  a)id
-  b)session
-  c)seton
-  d)otp
-  e)settime
+  a)id; INT FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
+  b)session; VARCHAR(40), user session.
+  c)seton; DATE, date on which session was set.
+  d)otp; VARCHAR(6), otp for sms validation.
+  e)settime: TIME, time of otp generation.
 3)WB_CustomerList
-  a)id
-  b)fname
-  c)lname
-  d)email
+  a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
+  b)fname; VARCHAR(20), customer firstname.
+  c)lname; VARCHAR(20), customer lastname.
+  d)email; VARCHAR(40), customer email.
 4)WB_CustomerAddress
   a)id
   b)hbno
