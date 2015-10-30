@@ -1,1 +1,33 @@
+##################################customer tables.###########################
+1)WB_CustomerMaster
+  a)id
+  b)mobno
+  c)password
+  d)verified
+2)WB_CustomerSession
+  a)id
+  b)session
+  c)seton
+  d)otp
+  e)settime
+3)WB_CustomerList
+  a)id
+  b)fname
+  c)lname
+  d)email
+4)WB_CustomerAddress
+  a)id
+  b)hbno
+  c)street
+  d)city
+  e)state
+  f)pin
+5)WB_CustomerLifestyle
+  a)id
+  b)lsid
+6)WB_Lifestyle
+  a)lsid
+  b)lsname
+7)WB_CustomerTransactions
 
+8)WB_Transactions
