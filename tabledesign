@@ -1,4 +1,4 @@
-##################################customer tables.###########################
+####################################################customer tables.#######################################################
 1)WB_CustomerMaster
   a)id; INT PRIMARY KEY 
   b)mobno; VARCHAR(13), UNIQUE, user registered mobile number.
@@ -6,7 +6,7 @@
   d)verified; BOOLEAN, mobile number verification status.
 2)WB_CustomerSession
   a)id; INT FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
-  b)session; VARCHAR(40), user session.
+  b)session; VARCHAR(40),UNIQUE, user session.
   c)seton; DATE, date on which session was set.
   d)otp; VARCHAR(6), otp for sms validation.
   e)settime: TIME, time of otp generation.
@@ -26,8 +26,8 @@
   a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and cascade.
   b)lsid;; INT ,FOREIGN KEY REFERENCES WB_Lifestyle(lsid).restrict on update and cascade.
 6)WB_Lifestyle
-  a)lsid; INT, unique id for a lifestyle
-  b)lsname; VARCHAR(20), name of the lifestyle.
+  a)lsid; INT,PRIMARY KEY unique id for a lifestyle
+  b)lsname; VARCHAR(20), UNIQUE,name of the lifestyle.
 7)WB_CustomerTransactions
 
 8)WB_Transactions
