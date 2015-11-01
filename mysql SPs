@@ -1,0 +1,261 @@
+#####generate  session##########################################################
+DELIMITER //
+CREATE PROCEDURE gensession(OUT sess VARCHAR(40),OUT ret INT)
+BEGIN
+DECLARE id INT;
+DECLARE temp VARCHAR(40);
+DECLARE exit handler for sqlexception
+BEGIN
+SET ret := 2;
+END;
+lab: LOOP
+select  concat(substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', rand()*35+1, 1)
+              ) into temp;
+select `id` into id from `WB_CustomerMaster` where `session`=temp;
+IF id IS NULL THEN
+          SET sess := temp;
+          LEAVE lab;      
+    END IF;
+END LOOP lab;
+SET ret := 0; 
+END //
+DELIMITER ;
+
+#####create 6 digit OTP##########################################################
+DELIMITER //
+CREATE PROCEDURE genotp(OUT otp VARCHAR(6),OUT ret INT)
+BEGIN
+DECLARE id INT;
+DECLARE exit handler for sqlexception
+BEGIN
+SET ret := 2;
+END;
+select  concat(substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1),
+               substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', floor(rand()*35+1), 1)
+              ) into otp;
+SET ret := 0;        
+END //
+DELIMITER ;
+
+#################register user####################################################
+DELIMITER //
+create procedure registeruser(IN mob VARCHAR(13),IN pass VARCHAR(60),IN fname VARCHAR(20),IN lname VARCHAR(20),IN email VARCHAR(40),OUT ret INT)
+this_proc: BEGIN
+DECLARE exit handler for sqlexception
+  BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE,@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+   ROLLBACK;
+  END;
+DECLARE exit handler for 1062
+  BEGIN
+   SET ret:=1;
+   ROLLBACK;
+  END;
+INSERT INTO `WB_CustomerMaster`(`mobno`, `password`,`fname`, `lname`, `email`) VALUES (mob,pass,fname,lname,email);
+SET ret := 0;
+END //
+DELIMITER ;
+
+#################login user####################################################
+DELIMITER //
+create procedure loginuser(IN mob VARCHAR(13),IN pass VARCHAR(60),OUT ses VARCHAR(40),OUT idc BIGINT,OUT ret INT)
+this_proc: BEGIN
+DECLARE idx BIGINT;
+DECLARE exit handler for sqlexception
+  BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+   @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+   ROLLBACK;
+  END;
+SELECT `id` into idx FROM `WB_CustomerMaster` WHERE `mobno`=mob and `password`=pass;
+IF idx is NULL THEN
+  SET ret := 1;
+  LEAVE this_proc;
+END IF;
+call gensession(@sess,@rett);
+SET ses := @sess;
+IF @sess IS NULL OR @rett !=0 THEN
+ SET ret := @rett;
+ LEAVE this_proc;
+END IF;
+UPDATE `WB_CustomerMaster` SET `session`=@sess,`seton`=now() WHERE `id`=idx;
+SET ret := 0;
+SET idc := idx;
+END //
+DELIMITER ;
+
+
+###############verify session####################################################
+DELIMITER //
+CREATE PROCEDURE verifysession(IN sess VARCHAR(40),OUT dt DATE,OUT id BIGINT,OUT ret INT)
+this_proc: BEGIN
+DECLARE idx BIGINT;
+DECLARE dat DATE;
+DECLARE exit handler for sqlexception
+BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE,@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+   ROLLBACK;
+END;
+select `seton`,`id` into dat,idx from `WB_CustomerMaster` where `session`=sess;
+IF idx IS NULL THEN
+          SET ret := 1;
+          LEAVE this_proc;    
+END IF;
+set ret := 0;
+set id := idx;
+set dt := dat;
+END //
+DELIMITER ;
+
+#################generate otp####################################################
+DELIMITER //
+create procedure generateotp(IN id INT,OUT ot VARCHAR(6),OUT ret INT)
+this_proc: BEGIN
+DECLARE st TIME;
+DECLARE exit handler for sqlexception
+  BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+   @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+   ROLLBACK;
+  END;
+select otp,settime into ot,st from `wb_cust_session` where `uid`=id;
+IF ot is NULL THEN
+   call genotp(@gotp,@gret);
+        IF @gotp is NULL or @gret!=0 THEN
+           set ret := @gret;
+           LEAVE this_proc;
+        ELSE
+           UPDATE `wb_cust_session` SET `otp`=@gotp,`settime`=CURTIME() WHERE `uid`=id;
+           set ret := 0;
+           set ot := @gotp;
+           LEAVE this_proc;
+        END IF;
+ELSE
+   IF TIME_TO_SEC(TIMEDIFF(CURTIME(),st)) > 900 THEN
+      call genotp(@gotp,@gret);
+        IF @gotp is NULL or @gret!=0 THEN
+           set ret := @gret;
+           LEAVE this_proc;
+        ELSE
+           UPDATE `wb_cust_session` SET `otp`=@gotp,`settime`=CURTIME() WHERE `uid`=id;
+           set ret := 0;
+           set ot := @gotp;
+           LEAVE this_proc;
+        END IF;
+   ELSE
+    set ret := 0;
+    LEAVE this_proc;
+   END IF;
+END IF;
+END //
+DELIMITER ;
+
+
+#################validate otp####################################################
+DELIMITER //
+create procedure validateotp(IN id INT,IN ot VARCHAR(6),OUT ret INT)
+this_proc: BEGIN
+DECLARE st TIME;
+DECLARE sotp VARCHAR(6);
+DECLARE exit handler for sqlexception
+  BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+   @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+  END;
+select otp,settime into sotp,st from `wb_cust_session` where `uid`=id and `otp`=ot;
+IF sotp is NULL THEN
+     set ret := 1;
+     LEAVE this_proc;       
+ELSE
+   IF TIME_TO_SEC(TIMEDIFF(CURTIME(),st)) > 900 THEN
+           set ret := 1;
+           LEAVE this_proc;       
+   ELSE
+    set ret := 0;
+    LEAVE this_proc;
+   END IF;
+END IF;
+END //
+DELIMITER ;
+
+
+#################logoff user####################################################
+DELIMITER //
+create procedure logoffuser(IN sess VARCHAR(40),OUT ret INT)
+this_proc: BEGIN
+DECLARE id INT;
+DECLARE exit handler for sqlexception
+  BEGIN
+   GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
+   @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+   SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+   SELECT @full_error;
+   SET ret := 2;
+  END;
+SELECT `uid` into id FROM `wb_cust_session` WHERE `session`=sess;
+IF id is NULL THEN
+   SET ret:=1;
+   LEAVE this_proc;
+END IF;
+DELETE FROM `wb_cust_session` WHERE `session`=sess;
+SET ret:=0;
+END //
+DELIMITER 																												;
