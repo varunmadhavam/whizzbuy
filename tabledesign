@@ -3,12 +3,11 @@
   a)id; INT PRIMARY KEY 
   b)mobno; VARCHAR(13), UNIQUE, user registered mobile number.
   c)password; VARCHAR, user password.
-  d)id; INT FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and delete.
-  e)session; VARCHAR(40),UNIQUE, user session.
-  f)seton; DATE, date on which session was set.
-  g)otp; VARCHAR(6), otp for sms validation.
-  h)settime: TIME, time of otp generation.
-  i)verified; BOOLEAN, mobile number verification status.
+  d)session; VARCHAR(40),UNIQUE, user session.
+  e)seton; DATE, date on which session was set.
+  f)otp; VARCHAR(6), otp for sms validation.
+  g)settime: TIME, time of otp generation.
+  h)verified; BOOLEAN, mobile number verification status.
   
 2)WB_CustomerList [ customer personal info ].
   a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and delete.
