@@ -8,14 +8,11 @@
   f)otp; VARCHAR(6), otp for sms validation.
   g)settime: TIME, time of otp generation.
   h)verified; BOOLEAN, mobile number verification status.
+  i)fname; VARCHAR(20), customer firstname.
+  j)lname; VARCHAR(20), customer lastname.
+  k)email; VARCHAR(40), customer email.
   
-2)WB_CustomerList [ customer personal info ].
-  a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and delete.
-  b)fname; VARCHAR(20), customer firstname.
-  c)lname; VARCHAR(20), customer lastname.
-  d)email; VARCHAR(40), customer email.
-  
-3)WB_CustomerAddress [ table to store customer address ].
+2)WB_CustomerAddress [ table to store customer address ].
   a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and delete.
   b)hbno; VARCHAR(20), house/building number.
   c)street; VARCHAR(20), street name.
@@ -23,14 +20,14 @@
   e)state; VARCHAR(20), state.
   f)pin; VARCHAR(6), zip code.
   
-4)WB_CustomerLifestyle [ customer to lifestyle mapping ].
+3)WB_CustomerLifestyle [ customer to lifestyle mapping ].
   a)id; INT ,FOREIGN KEY REFERENCES WB_CustomerMaster(id).restrict on update and delete.
   b)lsid;; INT ,FOREIGN KEY REFERENCES WB_Lifestyle(lsid).restrict on update and delete.
   
-5)WB_Lifestyle [ table to store all the available lifestyles ].
+4)WB_Lifestyle [ table to store all the available lifestyles ].
   a)lsid; INT,PRIMARY KEY unique id for a lifestyle
   b)lsname; VARCHAR(20), UNIQUE,name of the lifestyle.
   
-6)WB_CustomerTransactions
+5)WB_CustomerTransactions
 
-7)WB_Transactions
+6)WB_Transactions
