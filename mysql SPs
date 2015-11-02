@@ -1,4 +1,4 @@
-#####generate  session##########################################################
+###############################################generate  session##########################################################
 DELIMITER //
 CREATE PROCEDURE gensession(OUT sess VARCHAR(40),OUT ret INT)
 BEGIN
@@ -159,6 +159,7 @@ set dt := dat;
 END //
 DELIMITER ;
 
+###############################################logoff  user##########################################################
 DELIMITER //
 create procedure logoffuser(IN sess VARCHAR(40),OUT ret INT)
 this_proc: BEGIN
