@@ -184,9 +184,10 @@ DELIMITER ;
 
 #################generate otp####################################################
 DELIMITER //
-create procedure generateotp(IN id INT,OUT ot VARCHAR(6),OUT ret INT)
+create procedure generateotp(IN idc BIGINT,OUT ot VARCHAR(6),OUT ret INT)
 this_proc: BEGIN
 DECLARE st TIME;
+DECLARE mob VARCHAR(13);
 DECLARE exit handler for sqlexception
   BEGIN
    GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, 
@@ -196,42 +197,27 @@ DECLARE exit handler for sqlexception
    SET ret := 2;
    ROLLBACK;
   END;
-select otp,settime into ot,st from `wb_cust_session` where `uid`=id;
-IF ot is NULL THEN
-   call genotp(@gotp,@gret);
-        IF @gotp is NULL or @gret!=0 THEN
-           set ret := @gret;
-           LEAVE this_proc;
-        ELSE
-           UPDATE `wb_cust_session` SET `otp`=@gotp,`settime`=CURTIME() WHERE `uid`=id;
-           set ret := 0;
-           set ot := @gotp;
-           LEAVE this_proc;
-        END IF;
-ELSE
-   IF TIME_TO_SEC(TIMEDIFF(CURTIME(),st)) > 900 THEN
-      call genotp(@gotp,@gret);
-        IF @gotp is NULL or @gret!=0 THEN
-           set ret := @gret;
-           LEAVE this_proc;
-        ELSE
-           UPDATE `wb_cust_session` SET `otp`=@gotp,`settime`=CURTIME() WHERE `uid`=id;
-           set ret := 0;
-           set ot := @gotp;
-           LEAVE this_proc;
-        END IF;
-   ELSE
-    set ret := 0;
-    LEAVE this_proc;
-   END IF;
+SELECT `mobno` into mob from `WB_CustomerMaster` WHERE `id`=idc;
+IF mob is NULL THEN
+   set ret:=1;
+   LEAVE this_proc;
 END IF;
+call genotp(@gotp,@gret);
+  IF @gotp is NULL or @gret!=0 THEN
+     set ret := @gret;
+     LEAVE this_proc;
+  ELSE
+      UPDATE `WB_CustomerMaster` SET `otp`=@gotp,`settime`=CURTIME() WHERE `id`=idc;
+      set ret := 0;
+      set ot := @gotp;
+  END IF;
 END //
 DELIMITER ;
 
 
 #################validate otp####################################################
 DELIMITER //
-create procedure validateotp(IN id INT,IN ot VARCHAR(6),OUT ret INT)
+create procedure validateotp(IN idc BIGINT,IN ot VARCHAR(6),OUT ret INT)
 this_proc: BEGIN
 DECLARE st TIME;
 DECLARE sotp VARCHAR(6);
@@ -243,7 +229,7 @@ DECLARE exit handler for sqlexception
    SELECT @full_error;
    SET ret := 2;
   END;
-select otp,settime into sotp,st from `wb_cust_session` where `uid`=id and `otp`=ot;
+select otp,settime into sotp,st from `WB_CustomerMaster` where `id`=idc and `otp`=ot;
 IF sotp is NULL THEN
      set ret := 1;
      LEAVE this_proc;       
@@ -252,10 +238,10 @@ ELSE
            set ret := 1;
            LEAVE this_proc;       
    ELSE
+    UPDATE `WB_CustomerMaster` SET `otp`=NULL,`settime`=NULL WHERE `id`=idc;
     set ret := 0;
     LEAVE this_proc;
    END IF;
 END IF;
 END //
 DELIMITER ;
-														;
