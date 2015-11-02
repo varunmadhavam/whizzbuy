@@ -136,7 +136,7 @@ DELIMITER ;
 
 ###############verify session####################################################
 DELIMITER //
-CREATE PROCEDURE verifysession(IN sess VARCHAR(40),OUT dt DATE,OUT id BIGINT,OUT ret INT)
+CREATE PROCEDURE verifysession(IN sess VARCHAR(40),OUT dt DATE,OUT idc BIGINT,OUT ret INT)
 this_proc: BEGIN
 DECLARE idx BIGINT;
 DECLARE dat DATE;
@@ -154,7 +154,7 @@ IF idx IS NULL THEN
           LEAVE this_proc;    
 END IF;
 set ret := 0;
-set id := idx;
+set idc := idx;
 set dt := dat;
 END //
 DELIMITER ;
